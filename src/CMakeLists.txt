@@ -11,6 +11,7 @@ add_executable(cybertech
     demo.cc
     game/Entity.cc
     game/Group.cc
+    game/Random.cc
 )
 
 target_link_libraries(cybertech

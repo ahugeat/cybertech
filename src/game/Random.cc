@@ -20,47 +20,38 @@
  * SOFTWARE.
  */
 
-#include "Group.h"
+#include "Random.h"
 
-#include <cassert>
-#include <algorithm>
-#include <memory>
+#include <ctime>
 
 using namespace game;
 
-void Group::update(float dt) {
-	// erase-remove idiom
-	m_entities.erase(std::remove_if(m_entities.begin(), m_entities.end(), [](const Entity *e) {
-		return !e->isAlive();
-	}), m_entities.end());
-
-	std::sort(m_entities.begin(), m_entities.end(), [](const Entity * e1, const Entity * e2) {
-		return e1->getPriority() < e2->getPriority();
-	});
-
-	for (auto entity : m_entities) {
-		entity->update(dt);
-	}
+Random::Random()
+: m_engine(std::time(nullptr)) {
 }
 
-void Group::render(sf::RenderWindow& window) {
-	for (auto entity : m_entities) {
-		entity->render(window);
-	}
+Random::Random(unsigned seed)
+: m_engine(seed) {
+
 }
 
-void Group::addEntity(Entity& e) {
-	m_entities.push_back(&e);
+
+int Random::computeUniformInteger(int min, int max) {
+	std::uniform_int_distribution<int> dist(min, max);
+	return dist(m_engine);
 }
 
-Entity *Group::removeEntity(Entity *e) {
-	// erase-remove idiom
-	auto it = std::remove(m_entities.begin(), m_entities.end(), e);
+float Random::computeUniformFloat(float min, float max) {
+	std::uniform_real_distribution<float> dist(min, max);
+	return dist(m_engine);
+}
 
-	if (it != m_entities.end()) {
-		m_entities.erase(it, m_entities.end());
-		return e;
-	}
+float Random::computeNormalFloat(float mean, float stddev) {
+	std::normal_distribution<float> dist(mean, stddev);
+	return dist(m_engine);
+}
 
-	return nullptr;
+bool Random::computeBernoulli(float p) {
+	std::bernoulli_distribution dist(p);
+	return dist(m_engine);
 }

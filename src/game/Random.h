@@ -20,47 +20,30 @@
  * SOFTWARE.
  */
 
-#include "Group.h"
+#ifndef GAME_RANDOM_H
+#define GAME_RANDOM_H
 
-#include <cassert>
-#include <algorithm>
-#include <memory>
+#include <random>
 
-using namespace game;
+namespace game {
 
-void Group::update(float dt) {
-	// erase-remove idiom
-	m_entities.erase(std::remove_if(m_entities.begin(), m_entities.end(), [](const Entity *e) {
-		return !e->isAlive();
-	}), m_entities.end());
+	class Random {
+	public:
+		Random();
+		Random(unsigned seed);
 
-	std::sort(m_entities.begin(), m_entities.end(), [](const Entity * e1, const Entity * e2) {
-		return e1->getPriority() < e2->getPriority();
-	});
+		int computeUniformInteger(int min, int max);
 
-	for (auto entity : m_entities) {
-		entity->update(dt);
-	}
+		float computeUniformFloat(float min, float max);
+
+		float computeNormalFloat(float mean, float stddev);
+
+		bool computeBernoulli(float p);
+
+	private:
+		std::mt19937 m_engine;
+	};
+
 }
 
-void Group::render(sf::RenderWindow& window) {
-	for (auto entity : m_entities) {
-		entity->render(window);
-	}
-}
-
-void Group::addEntity(Entity& e) {
-	m_entities.push_back(&e);
-}
-
-Entity *Group::removeEntity(Entity *e) {
-	// erase-remove idiom
-	auto it = std::remove(m_entities.begin(), m_entities.end(), e);
-
-	if (it != m_entities.end()) {
-		m_entities.erase(it, m_entities.end());
-		return e;
-	}
-
-	return nullptr;
-}
+#endif // GAME_RANDOM_H

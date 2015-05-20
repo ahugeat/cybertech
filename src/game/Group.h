@@ -31,9 +31,6 @@
 
 namespace game {
 
-	/**
-	 * @ingroup graphics
-	 */
 	class Group {
 	public:
 
