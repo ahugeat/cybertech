@@ -12,8 +12,9 @@ add_executable(cybertech
     game/Entity.cc
     game/Group.cc
     game/Random.cc
+    local/Hero.cc
 )
 
 target_link_libraries(cybertech
-  ${SFML2_LIBRARIES}
+    ${SFML2_LIBRARIES}
 )

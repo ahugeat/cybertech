@@ -20,38 +20,26 @@
  * SOFTWARE.
  */
 
-#include <iostream>
+#ifndef LOCAL_HERO_H
+#define LOCAL_HERO_H
 
 #include <SFML/Graphics.hpp>
 
-#include "game/Group.h"
-#include "local/Hero.h"
+#include "../game/Entity.h"
 
-int main(void) {
-    sf::RenderWindow window(sf::VideoMode(800, 600), "CyberTech - demo");
+namespace local {
 
-    game::Group group;
+	class Hero : public game::Entity {
+	public:
+		Hero(const sf::Vector2f position);
 
-    local::Hero hero({ 400.0f, 300.0f });
-    group.addEntity(hero);
+		virtual void update(const float dt) override;
+		virtual void render(sf::RenderWindow& window) override;
 
-    while (window.isOpen()) {
-    sf::Event event;
+	private:
+		sf::Vector2f m_position;
+	};
 
-    while (window.pollEvent(event)) {
-      if (event.type == sf::Event::Closed) {
-        window.close();
-      }
-    }
-
-    // update
-
-    // render
-    window.clear(sf::Color::Black);
-    group.render(window);
-
-    window.display();
-  }
-
-    return EXIT_SUCCESS;
 }
+
+#endif // LOCAL_HERO_H

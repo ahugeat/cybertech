@@ -20,38 +20,26 @@
  * SOFTWARE.
  */
 
-#include <iostream>
+#include "Hero.h"
 
-#include <SFML/Graphics.hpp>
+static constexpr float RADIUS = 20.0f;
 
-#include "game/Group.h"
-#include "local/Hero.h"
+using namespace local;
 
-int main(void) {
-    sf::RenderWindow window(sf::VideoMode(800, 600), "CyberTech - demo");
+Hero::Hero(const sf::Vector2f position) 
+: m_position(position) {
 
-    game::Group group;
+}
 
-    local::Hero hero({ 400.0f, 300.0f });
-    group.addEntity(hero);
+void Hero::update(const float dt) {
+    // Nothing
+}
 
-    while (window.isOpen()) {
-    sf::Event event;
+void Hero::render(sf::RenderWindow& window) {
+    sf::CircleShape shape(RADIUS);
+    shape.setOrigin(RADIUS, RADIUS);
+    shape.setPosition(m_position);
+    shape.setFillColor(sf::Color::Red);
 
-    while (window.pollEvent(event)) {
-      if (event.type == sf::Event::Closed) {
-        window.close();
-      }
-    }
-
-    // update
-
-    // render
-    window.clear(sf::Color::Black);
-    group.render(window);
-
-    window.display();
-  }
-
-    return EXIT_SUCCESS;
+    window.draw(shape);
 }
