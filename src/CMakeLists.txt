@@ -10,6 +10,7 @@ add_definitions(-Wall -g -O2 -std=c++11)
 add_executable(cybertech
     demo.cc
     game/Entity.cc
+    game/Group.cc
 )
 
 target_link_libraries(cybertech

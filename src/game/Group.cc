@@ -20,18 +20,49 @@
  * SOFTWARE.
  */
 
-#include "Entity.h"
+#include "Group.h"
 
-using namespace game;
+#include <cassert>
+#include <algorithm>
+#include <memory>
 
-Entity::~Entity() {
-	// default: do nothing
-}
+namespace game {
 
-void Entity::update(const float dt) {
-	// default: do nothing
-}
+	void Group::update(float dt) {
+		// erase-remove idiom
+		m_entities.erase(std::remove_if(m_entities.begin(), m_entities.end(), [](const Entity *e) {
+			return !e->isAlive();
+		}), m_entities.end());
 
-void Entity::render(sf::RenderWindow& window) {
-	// default: do nothing
+		std::sort(m_entities.begin(), m_entities.end(), [](const Entity * e1, const Entity * e2) {
+			return e1->getPriority() < e2->getPriority();
+		});
+
+		for (auto entity : m_entities) {
+			entity->update(dt);
+		}
+	}
+
+	void Group::render(sf::RenderWindow& window) {
+		for (auto entity : m_entities) {
+			entity->render(window);
+		}
+	}
+
+	void Group::addEntity(Entity& e) {
+		m_entities.push_back(&e);
+	}
+
+	Entity *Group::removeEntity(Entity *e) {
+		// erase-remove idiom
+		auto it = std::remove(m_entities.begin(), m_entities.end(), e);
+
+		if (it != m_entities.end()) {
+			m_entities.erase(it, m_entities.end());
+			return e;
+		}
+
+		return nullptr;
+	}
+
 }

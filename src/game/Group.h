@@ -19,19 +19,35 @@
  * OUT OF OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE
  * SOFTWARE.
  */
+ 
+#ifndef GAME_GROUP_H
+#define GAME_GROUP_H
+
+#include <vector>
+
+#include <SFML/Graphics.hpp>
 
 #include "Entity.h"
 
-using namespace game;
+namespace game {
 
-Entity::~Entity() {
-	// default: do nothing
+	/**
+	 * @ingroup graphics
+	 */
+	class Group {
+	public:
+
+		void update(float dt);
+		void render(sf::RenderWindow& window);
+
+		void addEntity(Entity& e);
+		Entity *removeEntity(Entity *e);
+
+	private:
+		std::vector<Entity *> m_entities;
+	};
+
+
 }
 
-void Entity::update(const float dt) {
-	// default: do nothing
-}
-
-void Entity::render(sf::RenderWindow& window) {
-	// default: do nothing
-}
+#endif // GAME_GROUP_H
