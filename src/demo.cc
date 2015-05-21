@@ -28,35 +28,63 @@
 #include "local/Hero.h"
 
 int main(void) {
-    sf::RenderWindow window(sf::VideoMode(800, 600), "CyberTech - demo");
+	sf::RenderWindow window(sf::VideoMode(800, 600), "CyberTech - demo");
+	window.setKeyRepeatEnabled(false);
 
-    game::Group group;
+	game::Group group;
 
-    local::Hero hero({ 400.0f, 300.0f });
-    group.addEntity(hero);
+	local::Hero hero({ 400.0f, 300.0f });
+	group.addEntity(hero);
 
-    sf::Clock clock;
-    float dt = 0.0f;
+	sf::Clock clock;
+	float dt = 0.0f;
 
-    while (window.isOpen()) {
-    sf::Event event;
+	while (window.isOpen()) {
+	sf::Event event;
 
-    while (window.pollEvent(event)) {
-      if (event.type == sf::Event::Closed) {
-        window.close();
-      }
-    }
+		while (window.pollEvent(event)) {
+			if (event.type == sf::Event::Closed) {
+				window.close();
+			}
 
-    // update
-    dt = clock.restart().asSeconds();
-    group.update(dt);
+			if (event.type == sf::Event::KeyPressed) {
+				switch  (event.key.code) {
+					case sf::Keyboard::Right:
+						hero.setDirectionX(local::Direction::FORWARD);
+						break;
 
-    // render
-    window.clear(sf::Color::Black);
-    group.render(window);
+					case sf::Keyboard::Left:
+						hero.setDirectionX(local::Direction::BACKWARD);
+						break;
 
-    window.display();
-  }
+					default:
+						break;
+				}
+			}
 
-    return EXIT_SUCCESS;
+			if (event.type == sf::Event::KeyReleased) {
+				switch  (event.key.code) {
+					case sf::Keyboard::Right:
+					case sf::Keyboard::Left:
+						hero.setDirectionX(local::Direction::STAY);
+						break;
+
+					default:
+						break;
+				}
+			}
+		}
+
+		// update
+		dt = clock.restart().asSeconds();
+		group.update(dt);
+
+		// render
+		window.clear(sf::Color::Black);
+		group.render(window);
+
+		window.display();
+  	}
+
+	return EXIT_SUCCESS;
 }

@@ -23,23 +23,44 @@
 #include "Hero.h"
 
 static constexpr float RADIUS = 20.0f;
+static constexpr float VELOCITY = 90.0f;
 
 using namespace local;
 
 Hero::Hero(const sf::Vector2f position) 
-: m_position(position) {
+: m_position(position)
+, m_x(Direction::STAY)
+, m_y(Direction::STAY) {
 
+}
+
+void Hero::setDirectionX(Direction direction) {
+	m_x = direction;
+}
+
+void Hero::setDirectionY(Direction direction) {
+	m_y = direction;
 }
 
 void Hero::update(const float dt) {
-    // Nothing
+	sf::Vector2f velocity(0.0f, 0.0f);
+
+	// Move in X
+	if(m_x == Direction::FORWARD) {
+		velocity.x = VELOCITY;
+	}
+	else if (m_x == Direction::BACKWARD) {
+		velocity.x = -VELOCITY;
+	}
+
+	m_position += velocity * dt;
 }
 
 void Hero::render(sf::RenderWindow& window) {
-    sf::CircleShape shape(RADIUS);
-    shape.setOrigin(RADIUS, RADIUS);
-    shape.setPosition(m_position);
-    shape.setFillColor(sf::Color::Red);
+	sf::CircleShape shape(RADIUS);
+	shape.setOrigin(RADIUS, RADIUS);
+	shape.setPosition(m_position);
+	shape.setFillColor(sf::Color::Red);
 
-    window.draw(shape);
+	window.draw(shape);
 }

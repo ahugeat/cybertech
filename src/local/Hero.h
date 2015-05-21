@@ -29,15 +29,26 @@
 
 namespace local {
 
+	enum class Direction {
+		FORWARD,
+		STAY,
+		BACKWARD,
+	};
+
 	class Hero : public game::Entity {
 	public:
 		Hero(const sf::Vector2f position);
+
+		void setDirectionX(Direction direction);
+		void setDirectionY(Direction direction);
 
 		virtual void update(const float dt) override;
 		virtual void render(sf::RenderWindow& window) override;
 
 	private:
 		sf::Vector2f m_position;
+		Direction m_x;
+		Direction m_y;
 	};
 
 }
