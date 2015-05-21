@@ -35,6 +35,9 @@ int main(void) {
     local::Hero hero({ 400.0f, 300.0f });
     group.addEntity(hero);
 
+    sf::Clock clock;
+    float dt = 0.0f;
+
     while (window.isOpen()) {
     sf::Event event;
 
@@ -45,6 +48,8 @@ int main(void) {
     }
 
     // update
+    dt = clock.restart().asSeconds();
+    group.update(dt);
 
     // render
     window.clear(sf::Color::Black);
