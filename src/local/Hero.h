@@ -29,26 +29,24 @@
 
 namespace local {
 
-	enum class Direction {
-		FORWARD,
-		STAY,
-		BACKWARD,
-	};
-
 	class Hero : public game::Entity {
 	public:
 		Hero(const sf::Vector2f position);
 
-		void setDirectionX(Direction direction);
-		void setDirectionY(Direction direction);
+		void goLeft();
+		void goRight();
+		void stop();
+
+		void jump();
 
 		virtual void update(const float dt) override;
 		virtual void render(sf::RenderWindow& window) override;
 
 	private:
 		sf::Vector2f m_position;
-		Direction m_x;
-		Direction m_y;
+		sf::Vector2f m_velocity;
+		bool m_isJump;
+		float m_startJump;
 	};
 
 }

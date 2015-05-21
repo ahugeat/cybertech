@@ -50,11 +50,15 @@ int main(void) {
 			if (event.type == sf::Event::KeyPressed) {
 				switch  (event.key.code) {
 					case sf::Keyboard::Right:
-						hero.setDirectionX(local::Direction::FORWARD);
+						hero.goRight();
 						break;
 
 					case sf::Keyboard::Left:
-						hero.setDirectionX(local::Direction::BACKWARD);
+						hero.goLeft();
+						break;
+
+					case sf::Keyboard::Space:
+						hero.jump();
 						break;
 
 					default:
@@ -66,7 +70,7 @@ int main(void) {
 				switch  (event.key.code) {
 					case sf::Keyboard::Right:
 					case sf::Keyboard::Left:
-						hero.setDirectionX(local::Direction::STAY);
+						hero.stop();
 						break;
 
 					default:

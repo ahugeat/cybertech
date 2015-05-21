@@ -22,38 +22,58 @@
 
 #include "Hero.h"
 
+#include <iostream>
+#include <cmath>
+
 static constexpr float RADIUS = 20.0f;
-static constexpr float VELOCITY = 90.0f;
+static constexpr float X_VELOCITY = 100.0f;
+static constexpr float Y_VELOCITY = 300.0f;
+static constexpr float GRAVITY = 450.0f;
 
 using namespace local;
 
 Hero::Hero(const sf::Vector2f position) 
 : m_position(position)
-, m_x(Direction::STAY)
-, m_y(Direction::STAY) {
+, m_velocity(0.0f, 0.0f)
+, m_isJump(false)
+, m_startJump(0.0f) {
 
 }
 
-void Hero::setDirectionX(Direction direction) {
-	m_x = direction;
+void Hero::goLeft() {
+	m_velocity.x = -X_VELOCITY;
 }
 
-void Hero::setDirectionY(Direction direction) {
-	m_y = direction;
+void Hero::goRight() {
+	m_velocity.x = X_VELOCITY;
+}
+
+void Hero::stop() {
+	m_velocity.x = 0.0f;
+}
+
+void Hero::jump() {
+	if (!m_isJump) {
+		m_isJump = true;
+		m_velocity.y = -Y_VELOCITY;
+		m_startJump = m_position.y;
+	}
 }
 
 void Hero::update(const float dt) {
-	sf::Vector2f velocity(0.0f, 0.0f);
-
-	// Move in X
-	if(m_x == Direction::FORWARD) {
-		velocity.x = VELOCITY;
-	}
-	else if (m_x == Direction::BACKWARD) {
-		velocity.x = -VELOCITY;
+	// Manage jump
+	if (m_isJump) {
+		m_velocity.y += dt * GRAVITY;
 	}
 
-	m_position += velocity * dt;
+	m_position += m_velocity * dt;
+
+	// Check end of jump
+	if (m_isJump && m_position.y >= m_startJump) {
+		m_position.y = m_startJump;
+		m_isJump = false;
+		m_velocity.y = 0.0f;
+	}
 }
 
 void Hero::render(sf::RenderWindow& window) {
