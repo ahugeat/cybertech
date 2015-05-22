@@ -34,7 +34,7 @@ int main(void) {
 
 	local::Platforms platforms;
 
-	local::Hero hero({ 400.0f, 300.0f });
+	local::Hero hero(platforms, { local::TILE_SIZE * local::TILES_WIDTH / 2.0f, local::TILE_SIZE * (local::TILES_HEIGTH - 1) });
 
 	game::Group group;
 	group.addEntity(hero);

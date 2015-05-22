@@ -38,7 +38,8 @@ namespace local {
 	public:
 		Platforms();
 
-		//virtual void update(const float dt) override;
+		bool hasCollision(const sf::Vector2f position);
+
 		virtual void render(sf::RenderWindow& window) override;
 
 	private:

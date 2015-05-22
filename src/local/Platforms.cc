@@ -59,6 +59,13 @@ Platforms::Platforms()
 	}
 }
 
+bool Platforms::hasCollision(const sf::Vector2f position) {
+	unsigned int x_tile = position.x / TILE_SIZE;
+	unsigned int y_tile = position.y / TILE_SIZE;
+
+	return m_matrixCollision[x_tile + y_tile * TILES_WIDTH];
+}
+
 void Platforms::render(sf::RenderWindow& window) {
 	window.draw(m_vertices);
 }

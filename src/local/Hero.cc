@@ -22,6 +22,8 @@
 
 #include "Hero.h"
 
+#include <iostream>
+
 static constexpr float RADIUS = 20.0f;
 static constexpr float X_VELOCITY = 100.0f;
 static constexpr float Y_VELOCITY = 300.0f;
@@ -29,8 +31,9 @@ static constexpr float GRAVITY = 450.0f;
 
 using namespace local;
 
-Hero::Hero(const sf::Vector2f position) 
+Hero::Hero(Platforms &platforms, const sf::Vector2f position) 
 : game::Entity(1)
+, m_platforms(platforms)
 , m_position(position)
 , m_velocity(0.0f, 0.0f)
 , m_isJump(false)
@@ -66,12 +69,20 @@ void Hero::update(const float dt) {
 
 	m_position += m_velocity * dt;
 
+	if (m_platforms.hasCollision({ m_position.x + RADIUS, m_position.y + RADIUS })) {
+		m_velocity.y = 0.0f;
+		m_isJump = false;
+		// Fix position
+		float y_fix = ((static_cast<unsigned int>(m_position.y + RADIUS ) / TILE_SIZE) * TILE_SIZE) - RADIUS;
+		m_position.y = y_fix;
+	}
+
 	// Check end of jump
-	if (m_isJump && m_position.y >= m_startJump) {
+	/*if (m_isJump && m_position.y >= m_startJump) {
 		m_position.y = m_startJump;
 		m_isJump = false;
 		m_velocity.y = 0.0f;
-	}
+	}*/
 }
 
 void Hero::render(sf::RenderWindow& window) {
