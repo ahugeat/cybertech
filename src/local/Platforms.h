@@ -31,7 +31,7 @@
 
 namespace local {
     static constexpr unsigned int TILE_SIZE = 64;
-    static constexpr unsigned int TILES_WIDTH = 15;
+    static constexpr unsigned int TILES_WIDTH = 12;
     static constexpr unsigned int TILES_HEIGTH = 10;
 
 	class Platforms : public game::Entity {
