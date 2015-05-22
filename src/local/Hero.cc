@@ -30,7 +30,8 @@ static constexpr float GRAVITY = 450.0f;
 using namespace local;
 
 Hero::Hero(const sf::Vector2f position) 
-: m_position(position)
+: game::Entity(1)
+, m_position(position)
 , m_velocity(0.0f, 0.0f)
 , m_isJump(false)
 , m_startJump(0.0f) {

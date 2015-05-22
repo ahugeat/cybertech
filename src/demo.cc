@@ -32,14 +32,14 @@ int main(void) {
 	sf::RenderWindow window(sf::VideoMode(local::TILE_SIZE * local::TILES_WIDTH, local::TILE_SIZE * local::TILES_HEIGTH), "CyberTech - demo");
 	window.setKeyRepeatEnabled(false);
 
-	game::Group group;
-
 	local::Platforms platforms;
-	group.addEntity(platforms);
 
 	local::Hero hero({ 400.0f, 300.0f });
-	group.addEntity(hero);
 
+	game::Group group;
+	group.addEntity(hero);
+	group.addEntity(platforms);
+	
 	sf::Clock clock;
 	float dt = 0.0f;
 
