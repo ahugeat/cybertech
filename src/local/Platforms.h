@@ -20,64 +20,32 @@
  * SOFTWARE.
  */
 
-#include "Hero.h"
+#ifndef LOCAL_PLATFORMS_H
+#define LOCAL_PLATFORMS_H
 
-static constexpr float RADIUS = 20.0f;
-static constexpr float X_VELOCITY = 100.0f;
-static constexpr float Y_VELOCITY = 300.0f;
-static constexpr float GRAVITY = 450.0f;
+#include <array>
 
-using namespace local;
+#include <SFML/Graphics.hpp>
 
-Hero::Hero(const sf::Vector2f position) 
-: m_position(position)
-, m_velocity(0.0f, 0.0f)
-, m_isJump(false)
-, m_startJump(0.0f) {
+#include "../game/Entity.h"
+
+namespace local {
+    static constexpr unsigned int TILE_SIZE = 64;
+    static constexpr unsigned int TILES_WIDTH = 15;
+    static constexpr unsigned int TILES_HEIGTH = 10;
+
+	class Platforms : public game::Entity {
+	public:
+		Platforms();
+
+		//virtual void update(const float dt) override;
+		virtual void render(sf::RenderWindow& window) override;
+
+	private:
+		sf::VertexArray m_vertices;
+        std::array<bool, TILES_WIDTH * TILES_HEIGTH> m_matrixCollision;
+	};
 
 }
 
-void Hero::goLeft() {
-	m_velocity.x = -X_VELOCITY;
-}
-
-void Hero::goRight() {
-	m_velocity.x = X_VELOCITY;
-}
-
-void Hero::stop() {
-	m_velocity.x = 0.0f;
-}
-
-void Hero::jump() {
-	if (!m_isJump) {
-		m_isJump = true;
-		m_velocity.y = -Y_VELOCITY;
-		m_startJump = m_position.y;
-	}
-}
-
-void Hero::update(const float dt) {
-	// Manage jump
-	if (m_isJump) {
-		m_velocity.y += dt * GRAVITY;
-	}
-
-	m_position += m_velocity * dt;
-
-	// Check end of jump
-	if (m_isJump && m_position.y >= m_startJump) {
-		m_position.y = m_startJump;
-		m_isJump = false;
-		m_velocity.y = 0.0f;
-	}
-}
-
-void Hero::render(sf::RenderWindow& window) {
-	sf::CircleShape shape(RADIUS);
-	shape.setOrigin(RADIUS, RADIUS);
-	shape.setPosition(m_position);
-	shape.setFillColor(sf::Color::Red);
-
-	window.draw(shape);
-}
+#endif // LOCAL_PLATFORM_H

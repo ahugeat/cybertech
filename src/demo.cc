@@ -26,12 +26,16 @@
 
 #include "game/Group.h"
 #include "local/Hero.h"
+#include "local/Platforms.h"
 
 int main(void) {
-	sf::RenderWindow window(sf::VideoMode(800, 600), "CyberTech - demo");
+	sf::RenderWindow window(sf::VideoMode(local::TILE_SIZE * local::TILES_WIDTH, local::TILE_SIZE * local::TILES_HEIGTH), "CyberTech - demo");
 	window.setKeyRepeatEnabled(false);
 
 	game::Group group;
+
+	local::Platforms platforms;
+	group.addEntity(platforms);
 
 	local::Hero hero({ 400.0f, 300.0f });
 	group.addEntity(hero);

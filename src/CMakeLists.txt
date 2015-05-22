@@ -13,6 +13,7 @@ add_executable(cybertech
     game/Group.cc
     game/Random.cc
     local/Hero.cc
+    local/Platforms.cc
 )
 
 target_link_libraries(cybertech
