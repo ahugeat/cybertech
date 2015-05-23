@@ -24,6 +24,8 @@
 
 #include <iostream>
 
+#include "Platforms.h"
+
 static constexpr float HERO_SIZE = 32.0f;
 static constexpr float X_VELOCITY = 2.0f;
 static constexpr float Y_VELOCITY = -6.0f;

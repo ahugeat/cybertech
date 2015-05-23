@@ -35,12 +35,12 @@ namespace local {
     static constexpr unsigned int TILE_SIZE = 64;
     static constexpr unsigned int TILES_WIDTH = 12;
     static constexpr unsigned int TILES_HEIGTH = 10;
+    static constexpr unsigned int PLATFORM_WIDTH = 64;
+    static constexpr unsigned int PLATFORM_HEIGHT = 16;
 
 	class Platforms : public game::Entity {
 	public:
 		Platforms(b2World &b2_world);
-
-		bool hasCollision(const sf::Vector2f position);
 
 		virtual void render(sf::RenderWindow& window) override;
 

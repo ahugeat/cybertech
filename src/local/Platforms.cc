@@ -58,6 +58,13 @@ Platforms::Platforms(b2World &b2_world)
 	b2_staticBody = b2_world.CreateBody(&b2_bodyDef);
 	b2_staticBody->CreateFixture(&b2_fixture);
 
+	// Generate the platform
+	b2_boxShape.SetAsBox(PLATFORM_WIDTH * BOX2D_SCALE * 0.5f, PLATFORM_HEIGHT * BOX2D_SCALE * 0.5f);
+	b2_bodyDef.position.Set(8 * TILE_SIZE * BOX2D_SCALE, 8 * TILE_SIZE * BOX2D_SCALE);
+	b2_staticBody = b2_world.CreateBody(&b2_bodyDef);
+	b2_staticBody->CreateFixture(&b2_fixture);
+
+
 	// Setup physic
 	/*b2BodyDef b2_bodyDef;
 	b2_bodyDef.type = b2_staticBody;
@@ -139,13 +146,6 @@ Platforms::Platforms(b2World &b2_world)
 		b2Body* b2_staticBody = b2_world.CreateBody(&b2_bodyDef);
 		b2_staticBody->CreateFixture(&b2_fixture);
 	}*/
-}
-
-bool Platforms::hasCollision(const sf::Vector2f position) {
-	unsigned int x_tile = position.x / TILE_SIZE;
-	unsigned int y_tile = position.y / TILE_SIZE;
-
-	return m_matrixCollision[x_tile + y_tile * TILES_WIDTH];
 }
 
 void Platforms::render(sf::RenderWindow& window) {

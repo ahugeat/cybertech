@@ -27,7 +27,6 @@
 #include <SFML/Graphics.hpp>
 
 #include "../game/Entity.h"
-#include "../local/Platforms.h"
 
 namespace local {
 
