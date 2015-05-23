@@ -31,22 +31,48 @@ static constexpr float GRAVITY = 450.0f;
 
 using namespace local;
 
-Hero::Hero(Platforms &platforms, const sf::Vector2f position) 
+Hero::Hero(b2World &b2_world, Platforms &platforms, const sf::Vector2f position) 
 : game::Entity(1)
+, m_body(nullptr)
 , m_platforms(platforms)
 , m_position(position)
 , m_velocity(0.0f, 0.0f)
 , m_isJump(false)
 , m_startJump(0.0f) {
+	b2BodyDef b2_bodyDef;
+	b2_bodyDef.type = b2_dynamicBody;
+	b2_bodyDef.position.Set(1.0f, 1.0f);
+	b2_bodyDef.angle = 0;
 
+	b2PolygonShape b2_boxShape;
+	b2_boxShape.SetAsBox((TILE_SIZE / 2) * BOX2D_SCALE * 0.5f, TILE_SIZE * BOX2D_SCALE * 0.5f);
+
+	b2FixtureDef b2_fixture;
+	b2_fixture.shape = &b2_boxShape;
+	//b2_fixture.density = 0.01f;
+
+	m_body = b2_world.CreateBody(&b2_bodyDef);
+	m_body->CreateFixture(&b2_fixture);
 }
 
 void Hero::goLeft() {
 	m_velocity.x = -X_VELOCITY;
+	m_body->ApplyLinearImpulse( b2Vec2(-1,0), m_body->GetWorldCenter(), true);
 }
 
 void Hero::goRight() {
 	m_velocity.x = X_VELOCITY;
+	m_body->ApplyLinearImpulse( b2Vec2(1,0), m_body->GetWorldCenter(), true);
+}
+
+void Hero::goTop() {
+	m_velocity.x = -X_VELOCITY;
+	m_body->ApplyLinearImpulse( b2Vec2(0,-1), m_body->GetWorldCenter(), true);
+}
+
+void Hero::goBottom() {
+	m_velocity.x = X_VELOCITY;
+	m_body->ApplyLinearImpulse( b2Vec2(0,1), m_body->GetWorldCenter(), true);
 }
 
 void Hero::stop() {
@@ -63,7 +89,7 @@ void Hero::jump() {
 
 void Hero::update(const float dt) {
 	// Manage jump
-	if (m_isJump) {
+	/*if (m_isJump) {
 		m_velocity.y += dt * GRAVITY;
 	}
 
@@ -75,7 +101,7 @@ void Hero::update(const float dt) {
 		// Fix position
 		float y_fix = ((static_cast<unsigned int>(m_position.y + RADIUS ) / TILE_SIZE) * TILE_SIZE) - RADIUS;
 		m_position.y = y_fix;
-	}
+	}*/
 
 	// Check end of jump
 	/*if (m_isJump && m_position.y >= m_startJump) {
@@ -86,9 +112,11 @@ void Hero::update(const float dt) {
 }
 
 void Hero::render(sf::RenderWindow& window) {
-	sf::CircleShape shape(RADIUS);
-	shape.setOrigin(RADIUS, RADIUS);
-	shape.setPosition(m_position);
+	auto pos = m_body->GetPosition();
+
+	sf::RectangleShape shape({ TILE_SIZE / 2, TILE_SIZE});
+	shape.setOrigin(TILE_SIZE / 4, TILE_SIZE / 2);
+	shape.setPosition(pos.x / BOX2D_SCALE, pos.y / BOX2D_SCALE);
 	shape.setFillColor(sf::Color::Red);
 
 	window.draw(shape);

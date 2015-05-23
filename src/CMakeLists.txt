@@ -5,6 +5,11 @@ project(CyberTech CXX)
 find_package(PkgConfig REQUIRED)
 pkg_check_modules(SFML2 REQUIRED sfml-graphics>=2.1 sfml-audio>=2.1)
 
+set(CMAKE_MODULE_PATH
+  ${CMAKE_MODULE_PATH} "${CMAKE_SOURCE_DIR}/../modules")
+
+find_package(Box2D REQUIRED)
+
 add_definitions(-Wall -g -O2 -std=c++11)
 
 add_executable(cybertech
@@ -14,8 +19,10 @@ add_executable(cybertech
     game/Random.cc
     local/Hero.cc
     local/Platforms.cc
+    local/SFMLDebugDraw.cc
 )
 
 target_link_libraries(cybertech
     ${SFML2_LIBRARIES}
+    ${BOX2D_LIBRARIES}
 )

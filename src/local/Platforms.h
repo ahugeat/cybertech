@@ -25,24 +25,27 @@
 
 #include <array>
 
+#include <Box2D/Box2D.h>
 #include <SFML/Graphics.hpp>
 
 #include "../game/Entity.h"
 
 namespace local {
+    static constexpr float BOX2D_SCALE = 0.01f;
     static constexpr unsigned int TILE_SIZE = 64;
     static constexpr unsigned int TILES_WIDTH = 12;
     static constexpr unsigned int TILES_HEIGTH = 10;
 
 	class Platforms : public game::Entity {
 	public:
-		Platforms();
+		Platforms(b2World &b2_world);
 
 		bool hasCollision(const sf::Vector2f position);
 
 		virtual void render(sf::RenderWindow& window) override;
 
 	private:
+        b2Body *m_body;
 		sf::VertexArray m_vertices;
         std::array<bool, TILES_WIDTH * TILES_HEIGTH> m_matrixCollision;
 	};

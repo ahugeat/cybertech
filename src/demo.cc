@@ -22,19 +22,31 @@
 
 #include <iostream>
 
+#include <Box2D/Box2D.h>
 #include <SFML/Graphics.hpp>
 
 #include "game/Group.h"
 #include "local/Hero.h"
 #include "local/Platforms.h"
+#include "local/SFMLDebugDraw.h"
 
 int main(void) {
 	sf::RenderWindow window(sf::VideoMode(local::TILE_SIZE * local::TILES_WIDTH, local::TILE_SIZE * local::TILES_HEIGTH), "CyberTech - demo");
 	window.setKeyRepeatEnabled(false);
+    
+	b2Vec2 b2_gravity(0.0f, 0.0f);
+    b2World b2_world(b2_gravity);
 
-	local::Platforms platforms;
+    SFMLDebugDraw debugDraw(window);
 
-	local::Hero hero(platforms, { local::TILE_SIZE * local::TILES_WIDTH / 2.0f, local::TILE_SIZE * (local::TILES_HEIGTH - 1) });
+	b2_world.SetDebugDraw(&debugDraw);
+
+	/* Set initial flags for what to draw */
+	debugDraw.SetFlags(b2Draw::e_shapeBit); //Only draw shapes
+
+	local::Platforms platforms(b2_world);
+
+	local::Hero hero(b2_world, platforms, { local::TILE_SIZE * local::TILES_WIDTH / 2.0f, local::TILE_SIZE * (local::TILES_HEIGTH - 1) });
 
 	game::Group group;
 	group.addEntity(hero);
@@ -61,6 +73,14 @@ int main(void) {
 						hero.goLeft();
 						break;
 
+					case sf::Keyboard::Up:
+						hero.goTop();
+						break;
+
+					case sf::Keyboard::Down:
+						hero.goBottom();
+						break;
+
 					case sf::Keyboard::Space:
 						hero.jump();
 						break;
@@ -85,11 +105,13 @@ int main(void) {
 
 		// update
 		dt = clock.restart().asSeconds();
+		b2_world.Step(dt, 8, 3);
 		group.update(dt);
 
 		// render
 		window.clear(sf::Color::Black);
 		group.render(window);
+		b2_world.DrawDebugData();
 
 		window.display();
   	}

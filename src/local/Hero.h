@@ -23,6 +23,7 @@
 #ifndef LOCAL_HERO_H
 #define LOCAL_HERO_H
 
+#include <Box2D/Box2D.h>
 #include <SFML/Graphics.hpp>
 
 #include "../game/Entity.h"
@@ -32,7 +33,10 @@ namespace local {
 
 	class Hero : public game::Entity {
 	public:
-		Hero(Platforms &platforms, const sf::Vector2f position);
+		Hero(b2World &b2_world, Platforms &platforms, const sf::Vector2f position);
+
+		void goTop();
+		void goBottom();
 
 		void goLeft();
 		void goRight();
@@ -44,6 +48,7 @@ namespace local {
 		virtual void render(sf::RenderWindow& window) override;
 
 	private:
+		b2Body *m_body;
 		Platforms &m_platforms;
 		sf::Vector2f m_position;
 		sf::Vector2f m_velocity;
