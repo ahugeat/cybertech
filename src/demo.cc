@@ -99,7 +99,7 @@ int main(void) {
 		group.update(dt);
 
 		// render
-		window.clear(sf::Color::Black);
+		window.clear(sf::Color::White);
 		group.render(window);
 		b2_world.DrawDebugData();
 

@@ -24,8 +24,7 @@
 
 using namespace local;
 
-Platforms::Platforms(b2World &b2_world) 
-: m_vertices(sf::Quads, TILES_WIDTH * TILES_HEIGTH * 4) {
+Platforms::Platforms(b2World &b2_world) {
 	// Setup  the border of screen
 	b2BodyDef b2_bodyDef;
 	b2_bodyDef.type = b2_staticBody;
@@ -36,7 +35,7 @@ Platforms::Platforms(b2World &b2_world)
 	b2_fixture.shape = &b2_boxShape;
 
 	// Bottom
-	b2_boxShape.SetAsBox(TILE_SIZE * TILES_WIDTH * BOX2D_SCALE * 0.5f, 32.0f * BOX2D_SCALE);
+	b2_boxShape.SetAsBox(TILE_SIZE * TILES_WIDTH * BOX2D_SCALE * 0.5f, PLATFORM_HEIGHT * 2.0f * BOX2D_SCALE);
 	b2_bodyDef.position.Set(TILE_SIZE * TILES_WIDTH * BOX2D_SCALE * 0.5f, TILE_SIZE * TILES_HEIGTH * BOX2D_SCALE);
 	b2Body* b2_staticBody = b2_world.CreateBody(&b2_bodyDef);
 	b2_staticBody->CreateFixture(&b2_fixture);
@@ -58,11 +57,12 @@ Platforms::Platforms(b2World &b2_world)
 	b2_staticBody = b2_world.CreateBody(&b2_bodyDef);
 	b2_staticBody->CreateFixture(&b2_fixture);
 
-	// Generate the platform
+	// Generate the platforms
 	b2_boxShape.SetAsBox(PLATFORM_WIDTH * BOX2D_SCALE * 0.5f, PLATFORM_HEIGHT * BOX2D_SCALE * 0.5f);
 	b2_bodyDef.position.Set(8 * TILE_SIZE * BOX2D_SCALE, 8 * TILE_SIZE * BOX2D_SCALE);
 	b2_staticBody = b2_world.CreateBody(&b2_bodyDef);
 	b2_staticBody->CreateFixture(&b2_fixture);
+	m_platformsPosition.push_back(b2_staticBody);
 
 
 	// Setup physic
@@ -149,5 +149,19 @@ Platforms::Platforms(b2World &b2_world)
 }
 
 void Platforms::render(sf::RenderWindow& window) {
-	//window.draw(m_vertices);
+	// Draw ground
+	sf::RectangleShape shape;
+	shape.setSize({ TILE_SIZE * TILES_WIDTH, PLATFORM_HEIGHT * 2.0f });
+	shape.setPosition({ 0.0f, TILE_SIZE * TILES_HEIGTH - PLATFORM_HEIGHT * 2.0f });
+	shape.setFillColor(sf::Color(244, 164, 96));
+	window.draw(shape);
+
+	// Draw platforms
+	shape.setSize({ PLATFORM_WIDTH, PLATFORM_HEIGHT });
+	shape.setFillColor(sf::Color::Green);
+	for (auto position : m_platformsPosition) {
+		shape.setOrigin(PLATFORM_WIDTH * 0.5f, PLATFORM_HEIGHT * 0.5f);
+		shape.setPosition(position->GetPosition().x / BOX2D_SCALE, position->GetPosition().y / BOX2D_SCALE);
+		window.draw(shape);
+	}
 }

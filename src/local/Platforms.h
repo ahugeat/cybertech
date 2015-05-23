@@ -23,7 +23,7 @@
 #ifndef LOCAL_PLATFORMS_H
 #define LOCAL_PLATFORMS_H
 
-#include <array>
+#include <vector>
 
 #include <Box2D/Box2D.h>
 #include <SFML/Graphics.hpp>
@@ -31,12 +31,12 @@
 #include "../game/Entity.h"
 
 namespace local {
-    static constexpr float BOX2D_SCALE = 0.01f;
-    static constexpr unsigned int TILE_SIZE = 64;
-    static constexpr unsigned int TILES_WIDTH = 12;
-    static constexpr unsigned int TILES_HEIGTH = 10;
-    static constexpr unsigned int PLATFORM_WIDTH = 64;
-    static constexpr unsigned int PLATFORM_HEIGHT = 16;
+	static constexpr float BOX2D_SCALE = 0.01f;
+	static constexpr unsigned int TILE_SIZE = 64;
+	static constexpr unsigned int TILES_WIDTH = 12;
+	static constexpr unsigned int TILES_HEIGTH = 10;
+	static constexpr unsigned int PLATFORM_WIDTH = TILE_SIZE;
+	static constexpr unsigned int PLATFORM_HEIGHT = 16;
 
 	class Platforms : public game::Entity {
 	public:
@@ -45,9 +45,7 @@ namespace local {
 		virtual void render(sf::RenderWindow& window) override;
 
 	private:
-        b2Body *m_body;
-		sf::VertexArray m_vertices;
-        std::array<bool, TILES_WIDTH * TILES_HEIGTH> m_matrixCollision;
+		std::vector<b2Body*> m_platformsPosition;
 	};
 
 }
