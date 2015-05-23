@@ -22,20 +22,23 @@
 
 #include "Hero.h"
 
+#include <cassert>
 #include <iostream>
 
 #include "Platforms.h"
 
-static constexpr float HERO_SIZE = 32.0f;
+static constexpr float HERO_SIZE = 64.0f;
 static constexpr float X_VELOCITY = 2.0f;
 static constexpr float Y_VELOCITY = -6.0f;
 
 using namespace local;
 
-Hero::Hero(b2World &b2_world, const sf::Vector2f position) 
+Hero::Hero(b2World &b2_world, ResourceManager &resources, const sf::Vector2f position) 
 : game::Entity(1)
 , m_body(nullptr)
-, m_isJump(false) {
+, m_isJump(false)
+, m_textureStay(nullptr)
+, m_direction(Direction::Left) {
 	b2BodyDef b2_bodyDef;
 	b2_bodyDef.type = b2_dynamicBody;
 	b2_bodyDef.position.Set(position.x * BOX2D_SCALE, position.y * BOX2D_SCALE);
@@ -48,6 +51,9 @@ Hero::Hero(b2World &b2_world, const sf::Vector2f position)
 
 	m_body = b2_world.CreateBody(&b2_bodyDef);
 	m_body->CreateFixture(&b2_fixture);
+
+	m_textureStay = resources.getTexture("stay.png");
+	assert(m_textureStay != nullptr);
 }
 
 void Hero::goLeft() {
@@ -78,6 +84,14 @@ void Hero::update(const float dt) {
 	if (m_isJump && m_body->GetLinearVelocity().y == 0) {
 		m_isJump = false;
 	}
+
+	// Check direction
+	if (m_body->GetLinearVelocity().x < 0) {
+		m_direction = Direction::Left;
+	}
+	else if (m_body->GetLinearVelocity().x > 0) {
+		m_direction = Direction::Right;
+	}
 }
 
 void Hero::render(sf::RenderWindow& window) {
@@ -86,7 +100,14 @@ void Hero::render(sf::RenderWindow& window) {
 	sf::RectangleShape shape({ HERO_SIZE, HERO_SIZE});
 	shape.setOrigin(HERO_SIZE / 2, HERO_SIZE / 2);
 	shape.setPosition(pos.x / BOX2D_SCALE, pos.y / BOX2D_SCALE);
-	shape.setFillColor(sf::Color::Red);
+	shape.setTexture(m_textureStay);
+	shape.setTextureRect(sf::IntRect({ 128, 128 }, { 128, 128 }));
+	if (m_direction == Direction::Left) {
+		shape.setScale(-1, 1);
+	}
+	else {
+		shape.setScale(1, 1);
+	}
 
 	window.draw(shape);
 }

@@ -27,12 +27,13 @@
 #include <SFML/Graphics.hpp>
 
 #include "../game/Entity.h"
+#include "../game/Resources.h"
 
 namespace local {
 
 	class Hero : public game::Entity {
 	public:
-		Hero(b2World &b2_world, const sf::Vector2f position);
+		Hero(b2World &b2_world, ResourceManager &resources, const sf::Vector2f position);
 
 		void goLeft();
 		void goRight();
@@ -44,8 +45,15 @@ namespace local {
 		virtual void render(sf::RenderWindow& window) override;
 
 	private:
+		enum class Direction {
+			Left,
+			Right,
+		};
+
 		b2Body *m_body;
 		bool m_isJump;
+		sf::Texture *m_textureStay;
+		Direction m_direction;
 	};
 
 }
