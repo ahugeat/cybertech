@@ -28,8 +28,9 @@
 #include "Platforms.h"
 
 static constexpr float HERO_SIZE = 64.0f;
-static constexpr float X_VELOCITY = 2.0f;
-static constexpr float Y_VELOCITY = -6.0f;
+static constexpr float X_VELOCITY = 4.0f;
+static constexpr float Y_VELOCITY = -5.0f;
+static constexpr float LIMIT_ANIME = 0.03f;
 
 using namespace local;
 
@@ -38,7 +39,10 @@ Hero::Hero(b2World &b2_world, ResourceManager &resources, const sf::Vector2f pos
 , m_body(nullptr)
 , m_isJump(false)
 , m_textureStay(nullptr)
-, m_direction(Direction::Left) {
+, m_textureRun(nullptr)
+, m_direction(Direction::Left)
+, m_cptAnime(0)
+, m_timeElapsed(0.0f) {
 	b2BodyDef b2_bodyDef;
 	b2_bodyDef.type = b2_dynamicBody;
 	b2_bodyDef.position.Set(position.x * BOX2D_SCALE, position.y * BOX2D_SCALE);
@@ -54,6 +58,9 @@ Hero::Hero(b2World &b2_world, ResourceManager &resources, const sf::Vector2f pos
 
 	m_textureStay = resources.getTexture("stay.png");
 	assert(m_textureStay != nullptr);
+
+	m_textureRun = resources.getTexture("tileset_run.png");
+	assert(m_textureRun != nullptr);
 }
 
 void Hero::goLeft() {
@@ -83,30 +90,57 @@ void Hero::update(const float dt) {
 	// Check end jump
 	if (m_isJump && m_body->GetLinearVelocity().y == 0) {
 		m_isJump = false;
+		m_cptAnime = 0;
 	}
 
 	// Check direction
-	if (m_body->GetLinearVelocity().x < 0) {
+	if (m_body->GetLinearVelocity().x < -0.1) {
 		m_direction = Direction::Left;
 	}
-	else if (m_body->GetLinearVelocity().x > 0) {
+	else if (m_body->GetLinearVelocity().x > 0.1) {
 		m_direction = Direction::Right;
+	}
+	else {
+		m_cptAnime = 0;
+		return;
+	}
+
+	// Update the cpt anime
+	m_timeElapsed += dt;
+	if (m_timeElapsed >= LIMIT_ANIME) {
+		m_timeElapsed = 0.0f;
+		++m_cptAnime;
+		if (m_cptAnime > 8) {
+			m_cptAnime = 1;
+		}
 	}
 }
 
 void Hero::render(sf::RenderWindow& window) {
 	auto pos = m_body->GetPosition();
 
-	sf::RectangleShape shape({ HERO_SIZE, HERO_SIZE});
-	shape.setOrigin(HERO_SIZE / 2, HERO_SIZE / 2);
+	sf::RectangleShape shape;
+	shape.setSize({ 256, 256 });
+	shape.setScale(0.5, 0.5f);
+	shape.setOrigin(192, 192);
 	shape.setPosition(pos.x / BOX2D_SCALE, pos.y / BOX2D_SCALE);
-	shape.setTexture(m_textureStay);
-	shape.setTextureRect(sf::IntRect({ 128, 128 }, { 128, 128 }));
-	if (m_direction == Direction::Left) {
-		shape.setScale(-1, 1);
+
+	// Set the texure
+	if (m_cptAnime == 0) {
+		shape.setTexture(m_textureStay);
 	}
 	else {
-		shape.setScale(1, 1);
+		shape.setTexture(m_textureRun);
+		shape.setTextureRect(sf::IntRect({ 256 * ((m_cptAnime - 1) % 4), 256 * ((m_cptAnime - 1) / 4) }, { 256, 256 }));
+	}
+
+	// Set direction
+	sf::Vector2f scale = shape.getScale();
+	if (m_direction == Direction::Left) {
+		shape.setScale(scale.x * -1, scale.y * 1);
+	}
+	else {
+		shape.setScale(scale.x * 1, scale.y * 1);
 	}
 
 	window.draw(shape);

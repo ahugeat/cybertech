@@ -53,7 +53,10 @@ namespace local {
 		b2Body *m_body;
 		bool m_isJump;
 		sf::Texture *m_textureStay;
+		sf::Texture *m_textureRun;
 		Direction m_direction;
+		int m_cptAnime;
+		float m_timeElapsed;
 	};
 
 }
