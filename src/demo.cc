@@ -26,6 +26,7 @@
 #include <SFML/Graphics.hpp>
 
 #include "game/Group.h"
+#include "game/Resources.h"
 #include "local/Hero.h"
 #include "local/Platforms.h"
 #include "local/SFMLDebugDraw.h"
@@ -33,12 +34,15 @@
 int main(void) {
 	sf::RenderWindow window(sf::VideoMode(local::TILE_SIZE * local::TILES_WIDTH, local::TILE_SIZE * local::TILES_HEIGTH), "CyberTech - demo");
 	//window.setKeyRepeatEnabled(false);
-    
-    // Create the world physic
-    b2World b2_world(b2Vec2(0.0f, 10.0f));
 
-    // Debug Box2D
-    SFMLDebugDraw debugDraw(window);
+	ResourceManager resources;
+	resources.addSearchDir("../data");
+	
+	// Create the world physic
+	b2World b2_world(b2Vec2(0.0f, 10.0f));
+
+	// Debug Box2D
+	SFMLDebugDraw debugDraw(window);
 	b2_world.SetDebugDraw(&debugDraw);
 	debugDraw.SetFlags(b2Draw::e_shapeBit);
 
@@ -104,7 +108,7 @@ int main(void) {
 		b2_world.DrawDebugData();
 
 		window.display();
-  	}
+	}
 
 	return EXIT_SUCCESS;
 }
