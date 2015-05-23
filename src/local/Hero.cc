@@ -24,10 +24,9 @@
 
 #include <iostream>
 
-static constexpr float RADIUS = 20.0f;
+static constexpr float HERO_SIZE = 32.0f;
 static constexpr float X_VELOCITY = 2.0f;
-static constexpr float Y_VELOCITY = 300.0f;
-static constexpr float GRAVITY = 450.0f;
+static constexpr float Y_VELOCITY = -6.0f;
 
 using namespace local;
 
@@ -40,7 +39,7 @@ Hero::Hero(b2World &b2_world, const sf::Vector2f position)
 	b2_bodyDef.position.Set(position.x * BOX2D_SCALE, position.y * BOX2D_SCALE);
 
 	b2PolygonShape b2_boxShape;
-	b2_boxShape.SetAsBox((TILE_SIZE / 2) * BOX2D_SCALE * 0.5f, TILE_SIZE * BOX2D_SCALE * 0.5f);
+	b2_boxShape.SetAsBox(HERO_SIZE * BOX2D_SCALE * 0.5f, HERO_SIZE * BOX2D_SCALE * 0.5f);
 
 	b2FixtureDef b2_fixture;
 	b2_fixture.shape = &b2_boxShape;
@@ -50,52 +49,40 @@ Hero::Hero(b2World &b2_world, const sf::Vector2f position)
 }
 
 void Hero::goLeft() {
-	m_body->SetLinearVelocity(b2Vec2(-X_VELOCITY, 0.0f));
+	float yVelocity = m_body->GetLinearVelocity().y;
+	m_body->SetLinearVelocity(b2Vec2(-X_VELOCITY, yVelocity));
 }
 
 void Hero::goRight() {
-	m_body->SetLinearVelocity(b2Vec2(X_VELOCITY, 0.0f));
+	float yVelocity = m_body->GetLinearVelocity().y;
+	m_body->SetLinearVelocity(b2Vec2(X_VELOCITY, yVelocity));
 }
 
 void Hero::stop() {
-	m_body->SetLinearVelocity(b2Vec2(0.0f, 0.0f));
+	float yVelocity = m_body->GetLinearVelocity().y;
+	m_body->SetLinearVelocity(b2Vec2(0.0f, yVelocity));
 }
 
 void Hero::jump() {
+	// If he isn't jumping
 	if (!m_isJump) {
 		m_isJump = true;
+		m_body->ApplyLinearImpulse(b2Vec2(0.0f, Y_VELOCITY), m_body->GetWorldCenter(), true);
 	}
 }
 
 void Hero::update(const float dt) {
-	// Manage jump
-	/*if (m_isJump) {
-		m_velocity.y += dt * GRAVITY;
+	// Check end jump
+	if (m_isJump && m_body->GetLinearVelocity().y == 0) {
+		m_isJump = false;
 	}
-
-	m_position += m_velocity * dt;
-
-	if (m_platforms.hasCollision({ m_position.x + RADIUS, m_position.y + RADIUS })) {
-		m_velocity.y = 0.0f;
-		m_isJump = false;
-		// Fix position
-		float y_fix = ((static_cast<unsigned int>(m_position.y + RADIUS ) / TILE_SIZE) * TILE_SIZE) - RADIUS;
-		m_position.y = y_fix;
-	}*/
-
-	// Check end of jump
-	/*if (m_isJump && m_position.y >= m_startJump) {
-		m_position.y = m_startJump;
-		m_isJump = false;
-		m_velocity.y = 0.0f;
-	}*/
 }
 
 void Hero::render(sf::RenderWindow& window) {
 	auto pos = m_body->GetPosition();
 
-	sf::RectangleShape shape({ TILE_SIZE / 2, TILE_SIZE});
-	shape.setOrigin(TILE_SIZE / 4, TILE_SIZE / 2);
+	sf::RectangleShape shape({ HERO_SIZE, HERO_SIZE});
+	shape.setOrigin(HERO_SIZE / 2, HERO_SIZE / 2);
 	shape.setPosition(pos.x / BOX2D_SCALE, pos.y / BOX2D_SCALE);
 	shape.setFillColor(sf::Color::Red);
 
