@@ -32,21 +32,19 @@
 
 int main(void) {
 	sf::RenderWindow window(sf::VideoMode(local::TILE_SIZE * local::TILES_WIDTH, local::TILE_SIZE * local::TILES_HEIGTH), "CyberTech - demo");
-	window.setKeyRepeatEnabled(false);
+	//window.setKeyRepeatEnabled(false);
     
-	b2Vec2 b2_gravity(0.0f, 0.0f);
-    b2World b2_world(b2_gravity);
+    // Create the world physic
+    b2World b2_world(b2Vec2(0.0f, 10.0f));
 
+    // Debug Box2D
     SFMLDebugDraw debugDraw(window);
-
 	b2_world.SetDebugDraw(&debugDraw);
-
-	/* Set initial flags for what to draw */
-	debugDraw.SetFlags(b2Draw::e_shapeBit); //Only draw shapes
+	debugDraw.SetFlags(b2Draw::e_shapeBit);
 
 	local::Platforms platforms(b2_world);
 
-	local::Hero hero(b2_world, platforms, { local::TILE_SIZE * local::TILES_WIDTH / 2.0f, local::TILE_SIZE * (local::TILES_HEIGTH - 1) });
+	local::Hero hero(b2_world, { local::TILE_SIZE * local::TILES_WIDTH / 2.0f, local::TILE_SIZE * (local::TILES_HEIGTH - 1) * 0.5f });
 
 	game::Group group;
 	group.addEntity(hero);
@@ -71,14 +69,6 @@ int main(void) {
 
 					case sf::Keyboard::Left:
 						hero.goLeft();
-						break;
-
-					case sf::Keyboard::Up:
-						hero.goTop();
-						break;
-
-					case sf::Keyboard::Down:
-						hero.goBottom();
 						break;
 
 					case sf::Keyboard::Space:

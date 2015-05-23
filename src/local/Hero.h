@@ -33,10 +33,7 @@ namespace local {
 
 	class Hero : public game::Entity {
 	public:
-		Hero(b2World &b2_world, Platforms &platforms, const sf::Vector2f position);
-
-		void goTop();
-		void goBottom();
+		Hero(b2World &b2_world, const sf::Vector2f position);
 
 		void goLeft();
 		void goRight();
@@ -49,11 +46,7 @@ namespace local {
 
 	private:
 		b2Body *m_body;
-		Platforms &m_platforms;
-		sf::Vector2f m_position;
-		sf::Vector2f m_velocity;
 		bool m_isJump;
-		float m_startJump;
 	};
 
 }
