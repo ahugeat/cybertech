@@ -181,8 +181,8 @@ void Platforms::render(sf::RenderWindow& window) {
 	for (auto position : m_platformsPosition) {
 		shape.setOrigin(PLATFORM_WIDTH * 0.5f, PLATFORM_HEIGHT * 0.5f);
 		shape.setPosition(position->GetPosition().x / BOX2D_SCALE, position->GetPosition().y / BOX2D_SCALE);
-		shape.setFillColor(sf::Color(244, 164, 96));
-		shape.setTexture(nullptr);
+		shape.setTexture(m_textureGrass);
+		shape.setTextureRect(sf::IntRect({0, 0}, {64, 16}));
 		window.draw(shape);
 	}
 }
