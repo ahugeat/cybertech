@@ -24,7 +24,12 @@
 
 using namespace local;
 
-Platforms::Platforms(b2World &b2_world) {
+Platforms::Platforms(b2World &b2_world, ResourceManager &resources) 
+: m_textureBackground(nullptr) {
+	// Load texture
+	m_textureBackground = resources.getTexture("background.png");
+	assert(m_textureBackground != nullptr);
+
 	// Setup  the border of screen
 	b2BodyDef b2_bodyDef;
 	b2_bodyDef.type = b2_staticBody;
@@ -149,11 +154,18 @@ Platforms::Platforms(b2World &b2_world) {
 }
 
 void Platforms::render(sf::RenderWindow& window) {
-	// Draw ground
 	sf::RectangleShape shape;
+	// Draw background
+	shape.setSize({ TILE_SIZE * TILES_WIDTH, TILE_SIZE * TILES_HEIGTH });
+	shape.setPosition(0, 0);
+	shape.setTexture(m_textureBackground);
+	window.draw(shape);
+
+	// Draw ground
 	shape.setSize({ TILE_SIZE * TILES_WIDTH, PLATFORM_HEIGHT * 2.0f });
 	shape.setPosition({ 0.0f, TILE_SIZE * TILES_HEIGTH - PLATFORM_HEIGHT * 2.0f });
 	shape.setFillColor(sf::Color(244, 164, 96));
+	shape.setTexture(nullptr);
 	window.draw(shape);
 
 	// Draw platforms

@@ -29,6 +29,7 @@
 #include <SFML/Graphics.hpp>
 
 #include "../game/Entity.h"
+#include "../game/Resources.h"
 
 namespace local {
 	static constexpr float BOX2D_SCALE = 0.01f;
@@ -40,12 +41,13 @@ namespace local {
 
 	class Platforms : public game::Entity {
 	public:
-		Platforms(b2World &b2_world);
+		Platforms(b2World &b2_world, ResourceManager &resources);
 
 		virtual void render(sf::RenderWindow& window) override;
 
 	private:
 		std::vector<b2Body*> m_platformsPosition;
+		sf::Texture *m_textureBackground;
 	};
 
 }
