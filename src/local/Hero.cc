@@ -27,8 +27,6 @@
 
 #include "Platforms.h"
 
-static constexpr float HERO_WIDTH = 64.0f;
-static constexpr float HERO_HEIGHT = 58.0f;
 static constexpr float X_VELOCITY = 4.0f;
 static constexpr float Y_VELOCITY = -5.0f;
 static constexpr float LIMIT_ANIME = 0.03f;
@@ -36,7 +34,7 @@ static constexpr float LIMIT_ANIME_JUMP = 0.10f;
 
 using namespace local;
 
-Hero::Hero(b2World &b2_world, game::ResourceManager &resources, const sf::Vector2f position) 
+Hero::Hero(b2World &b2_world, game::ResourceManager &resources, Bones &bones, const sf::Vector2f position) 
 : game::Entity(1)
 , m_body(nullptr)
 , m_isJump(false)
@@ -45,7 +43,8 @@ Hero::Hero(b2World &b2_world, game::ResourceManager &resources, const sf::Vector
 , m_textureJump(nullptr)
 , m_direction(Direction::Left)
 , m_cptAnime(0)
-, m_timeElapsed(0.0f) {
+, m_timeElapsed(0.0f)
+, m_bones(bones) {
 	b2BodyDef b2_bodyDef;
 	b2_bodyDef.type = b2_dynamicBody;
 	b2_bodyDef.position.Set(position.x * BOX2D_SCALE, position.y * BOX2D_SCALE);
@@ -108,6 +107,10 @@ void Hero::jump() {
 }
 
 void Hero::update(const float dt) {
+	// Check bones
+	auto pos = m_body->GetPosition();
+	m_bones.hasTakeBone(sf::Vector2f((pos.x / BOX2D_SCALE) - (HERO_WIDTH * 0.5f), (pos.y / BOX2D_SCALE) - (HERO_WIDTH * 0.5f)));
+
 	// Check end jump
 	if (m_isJump && m_body->GetLinearVelocity().y == 0) {
 		m_isJump = false;

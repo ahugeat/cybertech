@@ -28,12 +28,15 @@
 
 #include "../game/Entity.h"
 #include "../game/Resources.h"
+#include "Bones.h"
 
 namespace local {
+	static constexpr float HERO_WIDTH = 64.0f;
+	static constexpr float HERO_HEIGHT = 58.0f;
 
 	class Hero : public game::Entity {
 	public:
-		Hero(b2World &b2_world, game::ResourceManager &resources, const sf::Vector2f position);
+		Hero(b2World &b2_world, game::ResourceManager &resources, Bones &bones, const sf::Vector2f position);
 
 		void goLeft();
 		void goRight();
@@ -58,6 +61,7 @@ namespace local {
 		Direction m_direction;
 		int m_cptAnime;
 		float m_timeElapsed;
+		Bones &m_bones;
 	};
 
 }

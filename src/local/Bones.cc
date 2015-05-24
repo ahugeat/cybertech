@@ -25,10 +25,13 @@
 #include <cassert>
 #include <iostream>
 
+#include "Hero.h"
 #include "Platforms.h"
 
 static constexpr unsigned int NUMBER_BONES = 5;
-static constexpr float RATIO = 32.0f / 256.0f;
+static constexpr float BONE_SIZE = 32.0f;
+static constexpr float RATIO = BONE_SIZE / 256.0f;
+static constexpr float TIME_POP = 4.0f;
 
 using namespace local;
 
@@ -55,8 +58,39 @@ Bones::Bones(game::ResourceManager &resources, game::Random &random)
 
 }
 
+bool Bones::hasTakeBone(sf::Vector2f position) {
+	bool found = false;
+	unsigned int i = 0;
+
+	// Check for each bone if hero take it
+	while (!found && i < m_positions.size()) {
+		sf::IntRect rectHero(sf::Vector2i(position.x, position.y), sf::Vector2i(HERO_WIDTH, HERO_HEIGHT));
+		sf::IntRect rectBone(sf::Vector2i(m_positions[i].x, m_positions[i].y), sf::Vector2i(BONE_SIZE, BONE_SIZE));
+
+		found = rectHero.intersects(rectBone);
+		if (found) {
+			m_positions.erase(m_positions.begin()+i);
+		}
+		++i;
+	}
+
+	return found;
+}
+
 void Bones::update(const float dt) {
-	
+	// Pop new bones
+	m_timeElapsed += dt;
+	if (m_timeElapsed >= TIME_POP) {
+		m_timeElapsed = 0.0f;
+		sf::Vector2f position;
+
+		do {
+			position.x = m_random.computeUniformInteger(1, TILES_WIDTH-1) * TILE_SIZE;
+			position.y = m_random.computeUniformInteger(2, TILES_HEIGTH-2) * TILE_SIZE + 16.0f;
+		} while(std::find(m_positions.begin(), m_positions.end(), position) != m_positions.end());
+
+		m_positions.push_back(position);
+	}
 }
 
 void Bones::render(sf::RenderWindow& window) {

@@ -53,7 +53,7 @@ int main(void) {
 
 	local::Platforms platforms(b2_world, resources);
 
-	local::Hero hero(b2_world, resources, { local::TILE_SIZE * local::TILES_WIDTH / 2.0f, local::TILE_SIZE * (local::TILES_HEIGTH - 1)});
+	local::Hero hero(b2_world, resources, bones, { local::TILE_SIZE * local::TILES_WIDTH / 2.0f, local::TILE_SIZE * (local::TILES_HEIGTH - 1)});
 
 	game::Group group;
 	group.addEntity(hero);
