@@ -46,7 +46,8 @@ Hero::Hero(b2World &b2_world, game::ResourceManager &resources, Bones &bones, co
 , m_cptAnime(0)
 , m_timeElapsed(0.0f)
 , m_bones(bones)
-, m_score(0) {
+, m_score(0)
+, m_move(Move::NONE) {
 	b2BodyDef b2_bodyDef;
 	b2_bodyDef.type = b2_dynamicBody;
 	b2_bodyDef.position.Set(position.x * BOX2D_SCALE, position.y * BOX2D_SCALE);
@@ -90,18 +91,15 @@ Hero::Hero(b2World &b2_world, game::ResourceManager &resources, Bones &bones, co
 }
 
 void Hero::goLeft() {
-	float yVelocity = m_body->GetLinearVelocity().y;
-	m_body->SetLinearVelocity(b2Vec2(-X_VELOCITY, yVelocity));
+	m_move = Move::LEFT;
 }
 
 void Hero::goRight() {
-	float yVelocity = m_body->GetLinearVelocity().y;
-	m_body->SetLinearVelocity(b2Vec2(X_VELOCITY, yVelocity));
+	m_move = Move::RIGHT;
 }
 
 void Hero::stop() {
-	float yVelocity = m_body->GetLinearVelocity().y;
-	m_body->SetLinearVelocity(b2Vec2(0.0f, yVelocity));
+	m_move = Move::NONE;
 }
 
 void Hero::jump() {
@@ -113,6 +111,25 @@ void Hero::jump() {
 }
 
 void Hero::update(const float dt) {
+	// Manage move
+	float yVelocity = 0.0f;
+	switch (m_move) {
+		case Move::LEFT:
+			yVelocity = m_body->GetLinearVelocity().y;
+			m_body->SetLinearVelocity(b2Vec2(-X_VELOCITY, yVelocity));
+			break;
+
+		case Move::RIGHT:
+			yVelocity = m_body->GetLinearVelocity().y;
+			m_body->SetLinearVelocity(b2Vec2(X_VELOCITY, yVelocity));
+			break;
+
+		case Move::NONE:
+			yVelocity = m_body->GetLinearVelocity().y;
+			m_body->SetLinearVelocity(b2Vec2(0.0f, yVelocity));
+			break;
+	}
+
 	// Check bones
 	auto pos = m_body->GetPosition();
 	if (m_bones.hasTakeBone(sf::Vector2f((pos.x / BOX2D_SCALE) - (HERO_WIDTH * 0.5f), (pos.y / BOX2D_SCALE) - (HERO_WIDTH * 0.5f)))) {

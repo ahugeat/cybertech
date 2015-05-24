@@ -53,6 +53,12 @@ namespace local {
 			Right,
 		};
 
+		enum class Move {
+			LEFT,
+			NONE,
+			RIGHT,
+		};
+
 		b2Body *m_body;
 		bool m_isJump;
 		sf::Texture *m_textureStay;
@@ -64,6 +70,7 @@ namespace local {
 		float m_timeElapsed;
 		Bones &m_bones;
 		unsigned int m_score;
+		Move m_move;
 	};
 
 }
