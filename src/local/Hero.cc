@@ -41,10 +41,12 @@ Hero::Hero(b2World &b2_world, game::ResourceManager &resources, Bones &bones, co
 , m_textureStay(nullptr)
 , m_textureRun(nullptr)
 , m_textureJump(nullptr)
+, m_font(nullptr)
 , m_direction(Direction::Left)
 , m_cptAnime(0)
 , m_timeElapsed(0.0f)
-, m_bones(bones) {
+, m_bones(bones)
+, m_score(0) {
 	b2BodyDef b2_bodyDef;
 	b2_bodyDef.type = b2_dynamicBody;
 	b2_bodyDef.position.Set(position.x * BOX2D_SCALE, position.y * BOX2D_SCALE);
@@ -73,6 +75,7 @@ Hero::Hero(b2World &b2_world, game::ResourceManager &resources, Bones &bones, co
 	m_body = b2_world.CreateBody(&b2_bodyDef);
 	m_body->CreateFixture(&b2_fixture);
 
+	// Load resources
 	m_textureStay = resources.getTexture("stay.png");
 	assert(m_textureStay != nullptr);
 
@@ -81,6 +84,9 @@ Hero::Hero(b2World &b2_world, game::ResourceManager &resources, Bones &bones, co
 
 	m_textureJump = resources.getTexture("tileset_jump.png");
 	assert(m_textureJump != nullptr);
+
+	m_font = resources.getFont("font.otf");
+	assert(m_font != nullptr);
 }
 
 void Hero::goLeft() {
@@ -109,7 +115,9 @@ void Hero::jump() {
 void Hero::update(const float dt) {
 	// Check bones
 	auto pos = m_body->GetPosition();
-	m_bones.hasTakeBone(sf::Vector2f((pos.x / BOX2D_SCALE) - (HERO_WIDTH * 0.5f), (pos.y / BOX2D_SCALE) - (HERO_WIDTH * 0.5f)));
+	if (m_bones.hasTakeBone(sf::Vector2f((pos.x / BOX2D_SCALE) - (HERO_WIDTH * 0.5f), (pos.y / BOX2D_SCALE) - (HERO_WIDTH * 0.5f)))) {
+		m_score += 50;
+	}
 
 	// Check end jump
 	if (m_isJump && m_body->GetLinearVelocity().y == 0) {
@@ -150,6 +158,16 @@ void Hero::update(const float dt) {
 }
 
 void Hero::render(sf::RenderWindow& window) {
+	// Render the score
+	sf::Text text;
+	text.setFont(*m_font);
+	text.setString("Score : " + std::to_string(m_score));
+	text.setCharacterSize(24);
+	text.setColor(sf::Color::Black);
+	text.setPosition(10, 10);
+	window.draw(text);
+
+	// Render the hero
 	auto pos = m_body->GetPosition();
 
 	sf::RectangleShape shape;

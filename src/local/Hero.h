@@ -58,10 +58,12 @@ namespace local {
 		sf::Texture *m_textureStay;
 		sf::Texture *m_textureRun;
 		sf::Texture *m_textureJump;
+		sf::Font *m_font;
 		Direction m_direction;
 		int m_cptAnime;
 		float m_timeElapsed;
 		Bones &m_bones;
+		unsigned int m_score;
 	};
 
 }
