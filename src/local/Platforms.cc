@@ -24,7 +24,7 @@
 
 using namespace local;
 
-Platforms::Platforms(b2World &b2_world, game::ResourceManager &resources, game::Random &random) 
+Platforms::Platforms(b2World &b2_world, game::ResourceManager &resources) 
 : m_textureBackground(nullptr)
 , m_textureGrass(nullptr) {
 	// Load texture

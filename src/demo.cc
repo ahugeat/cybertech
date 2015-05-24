@@ -27,6 +27,7 @@
 
 #include "game/Group.h"
 #include "game/Resources.h"
+#include "local/Bones.h"
 #include "local/Hero.h"
 #include "local/Platforms.h"
 #include "local/SFMLDebugDraw.h"
@@ -39,6 +40,8 @@ int main(void) {
 
 	game::ResourceManager resources;
 	resources.addSearchDir("../data");
+
+	local::Bones bones(resources, random);
 	
 	// Create the world physic
 	b2World b2_world(b2Vec2(0.0f, 10.0f));
@@ -48,13 +51,14 @@ int main(void) {
 	b2_world.SetDebugDraw(&debugDraw);
 	debugDraw.SetFlags(b2Draw::e_shapeBit);
 
-	local::Platforms platforms(b2_world, resources, random);
+	local::Platforms platforms(b2_world, resources);
 
 	local::Hero hero(b2_world, resources, { local::TILE_SIZE * local::TILES_WIDTH / 2.0f, local::TILE_SIZE * (local::TILES_HEIGTH - 1)});
 
 	game::Group group;
 	group.addEntity(hero);
 	group.addEntity(platforms);
+	group.addEntity(bones);
 	
 	sf::Clock clock;
 	float dt = 0.0f;

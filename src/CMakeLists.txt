@@ -20,6 +20,7 @@ add_executable(cybertech
 	game/Group.cc
 	game/Random.cc
 	game/Resources.cc
+	local/Bones.cc
 	local/Hero.cc
 	local/Platforms.cc
 	local/SFMLDebugDraw.cc

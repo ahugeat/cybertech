@@ -20,10 +20,8 @@
  * SOFTWARE.
  */
 
-#ifndef LOCAL_PLATFORMS_H
-#define LOCAL_PLATFORMS_H
-
-#include <vector>
+#ifndef LOCAL_BONES_H
+#define LOCAL_BONES_H
 
 #include <Box2D/Box2D.h>
 #include <SFML/Graphics.hpp>
@@ -33,25 +31,23 @@
 #include "../game/Resources.h"
 
 namespace local {
-	static constexpr float BOX2D_SCALE = 0.01f;
-	static constexpr unsigned int TILE_SIZE = 64;
-	static constexpr unsigned int TILES_WIDTH = 12;
-	static constexpr unsigned int TILES_HEIGTH = 10;
-	static constexpr unsigned int PLATFORM_WIDTH = TILE_SIZE;
-	static constexpr unsigned int PLATFORM_HEIGHT = 16;
 
-	class Platforms : public game::Entity {
+	class Bones : public game::Entity {
 	public:
-		Platforms(b2World &b2_world, game::ResourceManager &resources);
+		Bones(game::ResourceManager &resources, game::Random &random);
 
+		bool hasTakeBone(sf::Vector2f position);
+
+		virtual void update(const float dt) override;
 		virtual void render(sf::RenderWindow& window) override;
 
 	private:
-		std::vector<b2Body*> m_platformsPosition;
-		sf::Texture *m_textureBackground;
-		sf::Texture *m_textureGrass;
+		game::Random &m_random;
+		std::vector<sf::Vector2f> m_positions;
+		sf::Texture *m_texture;
+		float m_timeElapsed;
 	};
 
 }
 
-#endif // LOCAL_PLATFORM_H
+#endif // LOCAL_BONES_H
