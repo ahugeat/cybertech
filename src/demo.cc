@@ -47,9 +47,9 @@ int main(void) {
 	b2World b2_world(b2Vec2(0.0f, 10.0f));
 
 	// Debug Box2D
-	SFMLDebugDraw debugDraw(window);
+	/*SFMLDebugDraw debugDraw(window);
 	b2_world.SetDebugDraw(&debugDraw);
-	debugDraw.SetFlags(b2Draw::e_shapeBit);
+	debugDraw.SetFlags(b2Draw::e_shapeBit);*/
 
 	local::Platforms platforms(b2_world, resources);
 
@@ -111,7 +111,7 @@ int main(void) {
 		// render
 		window.clear(sf::Color::White);
 		group.render(window);
-		b2_world.DrawDebugData();
+		//b2_world.DrawDebugData();
 
 		window.display();
 	}
