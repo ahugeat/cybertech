@@ -31,6 +31,7 @@ static constexpr float HERO_SIZE = 64.0f;
 static constexpr float X_VELOCITY = 4.0f;
 static constexpr float Y_VELOCITY = -5.0f;
 static constexpr float LIMIT_ANIME = 0.03f;
+static constexpr float LIMIT_ANIME_JUMP = 0.10f;
 
 using namespace local;
 
@@ -40,6 +41,7 @@ Hero::Hero(b2World &b2_world, ResourceManager &resources, const sf::Vector2f pos
 , m_isJump(false)
 , m_textureStay(nullptr)
 , m_textureRun(nullptr)
+, m_textureJump(nullptr)
 , m_direction(Direction::Left)
 , m_cptAnime(0)
 , m_timeElapsed(0.0f) {
@@ -61,6 +63,9 @@ Hero::Hero(b2World &b2_world, ResourceManager &resources, const sf::Vector2f pos
 
 	m_textureRun = resources.getTexture("tileset_run.png");
 	assert(m_textureRun != nullptr);
+
+	m_textureJump = resources.getTexture("tileset_jump.png");
+	assert(m_textureJump != nullptr);
 }
 
 void Hero::goLeft() {
@@ -101,16 +106,25 @@ void Hero::update(const float dt) {
 		m_direction = Direction::Right;
 	}
 	else {
-		m_cptAnime = 0;
-		return;
+		if (!m_isJump) {
+			m_cptAnime = 0;
+			return;
+		}
 	}
 
 	// Update the cpt anime
 	m_timeElapsed += dt;
-	if (m_timeElapsed >= LIMIT_ANIME) {
+	if (!m_isJump && m_timeElapsed >= LIMIT_ANIME) {
 		m_timeElapsed = 0.0f;
 		++m_cptAnime;
 		if (m_cptAnime > 8) {
+			m_cptAnime = 1;
+		}
+	}
+	if (m_isJump && m_timeElapsed >= LIMIT_ANIME_JUMP) {
+		m_timeElapsed = 0.0f;
+		++m_cptAnime;
+		if (m_cptAnime > 19) {
 			m_cptAnime = 1;
 		}
 	}
@@ -129,9 +143,13 @@ void Hero::render(sf::RenderWindow& window) {
 	if (m_cptAnime == 0) {
 		shape.setTexture(m_textureStay);
 	}
-	else {
+	else if (!m_isJump) {
 		shape.setTexture(m_textureRun);
 		shape.setTextureRect(sf::IntRect({ 256 * ((m_cptAnime - 1) % 4), 256 * ((m_cptAnime - 1) / 4) }, { 256, 256 }));
+	}
+	else if (m_isJump) {
+		shape.setTexture(m_textureJump);
+		shape.setTextureRect(sf::IntRect({ 256 * ((m_cptAnime - 1) % 5), 256 * ((m_cptAnime - 1) / 5) }, { 256, 256 }));
 	}
 
 	// Set direction
