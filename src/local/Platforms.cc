@@ -177,12 +177,11 @@ void Platforms::render(sf::RenderWindow& window) {
 
 	// Draw platforms
 	shape.setSize({ PLATFORM_WIDTH, PLATFORM_HEIGHT });
-	shape.setFillColor(sf::Color::Green);
+	shape.setTexture(m_textureGrass);
+	shape.setTextureRect(sf::IntRect({0, 0}, {64, 20}));
+	shape.setOrigin(PLATFORM_WIDTH * 0.5f, PLATFORM_HEIGHT * 0.5f);
 	for (auto position : m_platformsPosition) {
-		shape.setOrigin(PLATFORM_WIDTH * 0.5f, PLATFORM_HEIGHT * 0.5f);
 		shape.setPosition(position->GetPosition().x / BOX2D_SCALE, position->GetPosition().y / BOX2D_SCALE);
-		shape.setTexture(m_textureGrass);
-		shape.setTextureRect(sf::IntRect({0, 0}, {64, 16}));
 		window.draw(shape);
 	}
 }
