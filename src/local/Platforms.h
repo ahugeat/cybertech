@@ -48,6 +48,7 @@ namespace local {
 	private:
 		std::vector<b2Body*> m_platformsPosition;
 		sf::Texture *m_textureBackground;
+		sf::Texture *m_textureGrass;
 	};
 
 }

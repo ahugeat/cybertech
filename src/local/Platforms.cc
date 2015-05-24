@@ -25,10 +25,14 @@
 using namespace local;
 
 Platforms::Platforms(b2World &b2_world, ResourceManager &resources) 
-: m_textureBackground(nullptr) {
+: m_textureBackground(nullptr)
+, m_textureGrass(nullptr) {
 	// Load texture
 	m_textureBackground = resources.getTexture("background.png");
 	assert(m_textureBackground != nullptr);
+
+	m_textureGrass = resources.getTexture("grass.png");
+	assert(m_textureGrass != nullptr);
 
 	// Setup  the border of screen
 	b2BodyDef b2_bodyDef;
@@ -162,11 +166,14 @@ void Platforms::render(sf::RenderWindow& window) {
 	window.draw(shape);
 
 	// Draw ground
-	shape.setSize({ TILE_SIZE * TILES_WIDTH, PLATFORM_HEIGHT * 2.0f });
-	shape.setPosition({ 0.0f, TILE_SIZE * TILES_HEIGTH - PLATFORM_HEIGHT * 2.0f });
-	shape.setFillColor(sf::Color(244, 164, 96));
-	shape.setTexture(nullptr);
-	window.draw(shape);
+	shape.setSize({ 64.0f, 64.0f });
+	shape.setTexture(m_textureGrass);
+	shape.setTextureRect(sf::IntRect({0, 0}, {64, 48}));
+
+	for (unsigned int i = 0; i < TILES_WIDTH; ++i) {
+		shape.setPosition({ i * 64.0f, TILE_SIZE * TILES_HEIGTH - PLATFORM_HEIGHT * 2.0f });
+		window.draw(shape);
+	}
 
 	// Draw platforms
 	shape.setSize({ PLATFORM_WIDTH, PLATFORM_HEIGHT });
@@ -174,6 +181,8 @@ void Platforms::render(sf::RenderWindow& window) {
 	for (auto position : m_platformsPosition) {
 		shape.setOrigin(PLATFORM_WIDTH * 0.5f, PLATFORM_HEIGHT * 0.5f);
 		shape.setPosition(position->GetPosition().x / BOX2D_SCALE, position->GetPosition().y / BOX2D_SCALE);
+		shape.setFillColor(sf::Color(244, 164, 96));
+		shape.setTexture(nullptr);
 		window.draw(shape);
 	}
 }
