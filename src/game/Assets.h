@@ -28,17 +28,19 @@
 
 #include <boost/filesystem.hpp>
 
-/**
- * @ingroup base
- */
-class AssetManager {
-public:
-	void addSearchDir(boost::filesystem::path path);
+namespace game {
+	/**
+	 * @ingroup base
+	 */
+	class AssetManager {
+	public:
+		void addSearchDir(boost::filesystem::path path);
 
-	boost::filesystem::path getAbsolutePath(const boost::filesystem::path& relative_path);
+		boost::filesystem::path getAbsolutePath(const boost::filesystem::path& relative_path);
 
-private:
-	std::vector<boost::filesystem::path> m_searchdirs;
-};
+	private:
+		std::vector<boost::filesystem::path> m_searchdirs;
+	};
+}
 
 #endif // GAME_ASSETS_H

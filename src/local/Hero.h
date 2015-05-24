@@ -33,7 +33,7 @@ namespace local {
 
 	class Hero : public game::Entity {
 	public:
-		Hero(b2World &b2_world, ResourceManager &resources, const sf::Vector2f position);
+		Hero(b2World &b2_world, game::ResourceManager &resources, const sf::Vector2f position);
 
 		void goLeft();
 		void goRight();

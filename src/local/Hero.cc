@@ -35,7 +35,7 @@ static constexpr float LIMIT_ANIME_JUMP = 0.10f;
 
 using namespace local;
 
-Hero::Hero(b2World &b2_world, ResourceManager &resources, const sf::Vector2f position) 
+Hero::Hero(b2World &b2_world, game::ResourceManager &resources, const sf::Vector2f position) 
 : game::Entity(1)
 , m_body(nullptr)
 , m_isJump(false)

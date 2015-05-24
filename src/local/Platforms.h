@@ -29,6 +29,7 @@
 #include <SFML/Graphics.hpp>
 
 #include "../game/Entity.h"
+#include "../game/Random.h"
 #include "../game/Resources.h"
 
 namespace local {
@@ -41,7 +42,7 @@ namespace local {
 
 	class Platforms : public game::Entity {
 	public:
-		Platforms(b2World &b2_world, ResourceManager &resources);
+		Platforms(b2World &b2_world, game::ResourceManager &resources, game::Random &random);
 
 		virtual void render(sf::RenderWindow& window) override;
 

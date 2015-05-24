@@ -33,33 +33,35 @@
 
 #include "Assets.h"
 
-/**
- * @ingroup graphics
- */
-class ResourceManager : public AssetManager {
-public:
-	sf::Font *getFont(const boost::filesystem::path& path);
-	sf::SoundBuffer *getSoundBuffer(const boost::filesystem::path& path);
-	sf::Texture *getTexture(const boost::filesystem::path& path);
-
-private:
-	template<typename T>
-	class ResourceCache {
+namespace game {
+	/**
+	 * @ingroup graphics
+	 */
+	class ResourceManager : public AssetManager {
 	public:
-		T *findResource(const boost::filesystem::path& key);
-		T *loadResource(const boost::filesystem::path& key, const boost::filesystem::path& path);
+		sf::Font *getFont(const boost::filesystem::path& path);
+		sf::SoundBuffer *getSoundBuffer(const boost::filesystem::path& path);
+		sf::Texture *getTexture(const boost::filesystem::path& path);
+
 	private:
-		std::map<boost::filesystem::path, std::unique_ptr<T>> m_cache;
+		template<typename T>
+		class ResourceCache {
+		public:
+			T *findResource(const boost::filesystem::path& key);
+			T *loadResource(const boost::filesystem::path& key, const boost::filesystem::path& path);
+		private:
+			std::map<boost::filesystem::path, std::unique_ptr<T>> m_cache;
+		};
+
+	private:
+		ResourceCache<sf::Font> m_fonts;
+		ResourceCache<sf::SoundBuffer> m_sounds;
+		ResourceCache<sf::Texture> m_textures;
+
+	private:
+		template<typename T>
+		T *getResource(const boost::filesystem::path& path, ResourceCache<T>& cache);
 	};
-
-private:
-	ResourceCache<sf::Font> m_fonts;
-	ResourceCache<sf::SoundBuffer> m_sounds;
-	ResourceCache<sf::Texture> m_textures;
-
-private:
-	template<typename T>
-	T *getResource(const boost::filesystem::path& path, ResourceCache<T>& cache);
-};
+}
 
 #endif // GAME_RESOURCE_H

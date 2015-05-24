@@ -24,7 +24,7 @@
 
 using namespace local;
 
-Platforms::Platforms(b2World &b2_world, ResourceManager &resources) 
+Platforms::Platforms(b2World &b2_world, game::ResourceManager &resources, game::Random &random) 
 : m_textureBackground(nullptr)
 , m_textureGrass(nullptr) {
 	// Load texture
@@ -68,93 +68,82 @@ Platforms::Platforms(b2World &b2_world, ResourceManager &resources)
 
 	// Generate the platforms
 	b2_boxShape.SetAsBox(PLATFORM_WIDTH * BOX2D_SCALE * 0.5f, PLATFORM_HEIGHT * BOX2D_SCALE * 0.5f);
-	b2_bodyDef.position.Set(8 * TILE_SIZE * BOX2D_SCALE, 8 * TILE_SIZE * BOX2D_SCALE);
+
+	// First line
+	b2_bodyDef.position.Set(1 * TILE_SIZE * BOX2D_SCALE, 8 * TILE_SIZE * BOX2D_SCALE);
 	b2_staticBody = b2_world.CreateBody(&b2_bodyDef);
 	b2_staticBody->CreateFixture(&b2_fixture);
 	m_platformsPosition.push_back(b2_staticBody);
 
+	b2_bodyDef.position.Set(2 * TILE_SIZE * BOX2D_SCALE, 8 * TILE_SIZE * BOX2D_SCALE);
+	b2_staticBody = b2_world.CreateBody(&b2_bodyDef);
+	b2_staticBody->CreateFixture(&b2_fixture);
+	m_platformsPosition.push_back(b2_staticBody);
 
-	// Setup physic
-	/*b2BodyDef b2_bodyDef;
-	b2_bodyDef.type = b2_staticBody;
-	b2_bodyDef.angle = 0;
+	b2_bodyDef.position.Set((TILES_WIDTH - 1) * TILE_SIZE * BOX2D_SCALE, 8 * TILE_SIZE * BOX2D_SCALE);
+	b2_staticBody = b2_world.CreateBody(&b2_bodyDef);
+	b2_staticBody->CreateFixture(&b2_fixture);
+	m_platformsPosition.push_back(b2_staticBody);
 
-	b2PolygonShape b2_boxShape;
-	b2_boxShape.SetAsBox(TILE_SIZE * BOX2D_SCALE * 0.5f, TILE_SIZE * BOX2D_SCALE * 0.5f);
+	b2_bodyDef.position.Set((TILES_WIDTH - 2) * TILE_SIZE * BOX2D_SCALE, 8 * TILE_SIZE * BOX2D_SCALE);
+	b2_staticBody = b2_world.CreateBody(&b2_bodyDef);
+	b2_staticBody->CreateFixture(&b2_fixture);
+	m_platformsPosition.push_back(b2_staticBody);
 
-	b2FixtureDef b2_fixture;
-	b2_fixture.shape = &b2_boxShape;
-	b2_fixture.density = 1.0f;
-	b2_fixture.friction = 0.3f;*/
-	//b2_fixture.density = 1;
+	// Second Line
+	b2_bodyDef.position.Set((TILES_WIDTH / 2) * TILE_SIZE * BOX2D_SCALE, 7 * TILE_SIZE * BOX2D_SCALE);
+	b2_staticBody = b2_world.CreateBody(&b2_bodyDef);
+	b2_staticBody->CreateFixture(&b2_fixture);
+	m_platformsPosition.push_back(b2_staticBody);
 
-	/*for (unsigned int i = 0; i < TILES_WIDTH; ++i) {
-		for (unsigned int j = 0; j < TILES_HEIGTH - 1; ++j)
-		{
-			// get a pointer to the current tile's quad
-			sf::Vertex* quad = &m_vertices[(i + j * TILES_WIDTH) * 4];*/
+	// Third line
+	b2_bodyDef.position.Set(0 * TILE_SIZE * BOX2D_SCALE, 6 * TILE_SIZE * BOX2D_SCALE);
+	b2_staticBody = b2_world.CreateBody(&b2_bodyDef);
+	b2_staticBody->CreateFixture(&b2_fixture);
+	m_platformsPosition.push_back(b2_staticBody);
 
+	b2_bodyDef.position.Set(1 * TILE_SIZE * BOX2D_SCALE, 6 * TILE_SIZE * BOX2D_SCALE);
+	b2_staticBody = b2_world.CreateBody(&b2_bodyDef);
+	b2_staticBody->CreateFixture(&b2_fixture);
+	m_platformsPosition.push_back(b2_staticBody);
 
-			// define its 4 corners
-			/*quad[0].position = sf::Vector2f(i * TILE_SIZE, j * TILE_SIZE);
-			quad[1].position = sf::Vector2f((i + 1) * TILE_SIZE, j * TILE_SIZE);
-			quad[2].position = sf::Vector2f((i + 1) * TILE_SIZE, (j + 1) * TILE_SIZE);
-			quad[3].position = sf::Vector2f(i * TILE_SIZE, (j + 1) * TILE_SIZE);*/
+	b2_bodyDef.position.Set(TILES_WIDTH * TILE_SIZE * BOX2D_SCALE, 6 * TILE_SIZE * BOX2D_SCALE);
+	b2_staticBody = b2_world.CreateBody(&b2_bodyDef);
+	b2_staticBody->CreateFixture(&b2_fixture);
+	m_platformsPosition.push_back(b2_staticBody);
 
-			/*if (i == 5 && j == TILES_HEIGTH - 3) {
-				quad[0].color = sf::Color::Green;
-				quad[1].color = sf::Color::Green;
-				quad[2].color = sf::Color::Green;
-				quad[3].color = sf::Color::Red;
+	b2_bodyDef.position.Set((TILES_WIDTH - 1) * TILE_SIZE * BOX2D_SCALE, 6 * TILE_SIZE * BOX2D_SCALE);
+	b2_staticBody = b2_world.CreateBody(&b2_bodyDef);
+	b2_staticBody->CreateFixture(&b2_fixture);
+	m_platformsPosition.push_back(b2_staticBody);
 
-				m_matrixCollision[i + j * TILES_WIDTH] = true;
+	// Fourth line
+	b2_bodyDef.position.Set((5 * TILE_SIZE + TILE_SIZE / 2) * BOX2D_SCALE, 5 * TILE_SIZE * BOX2D_SCALE);
+	b2_staticBody = b2_world.CreateBody(&b2_bodyDef);
+	b2_staticBody->CreateFixture(&b2_fixture);
+	m_platformsPosition.push_back(b2_staticBody);
 
-				b2_bodyDef.position.Set((i * TILE_SIZE) * BOX2D_SCALE, (j * TILE_SIZE) * BOX2D_SCALE);
+	b2_bodyDef.position.Set((7 * TILE_SIZE - TILE_SIZE / 2) * BOX2D_SCALE, 5 * TILE_SIZE * BOX2D_SCALE);
+	b2_staticBody = b2_world.CreateBody(&b2_bodyDef);
+	b2_staticBody->CreateFixture(&b2_fixture);
+	m_platformsPosition.push_back(b2_staticBody);
 
-				quad[0].position = sf::Vector2f(b2_bodyDef.position.x / BOX2D_SCALE, b2_bodyDef.position.y / BOX2D_SCALE);
-				quad[1].position = sf::Vector2f(b2_bodyDef.position.x / BOX2D_SCALE + TILE_SIZE, b2_bodyDef.position.y / BOX2D_SCALE);
-				quad[2].position = sf::Vector2f(b2_bodyDef.position.x / BOX2D_SCALE + TILE_SIZE, b2_bodyDef.position.y / BOX2D_SCALE + TILE_SIZE);
-				quad[3].position = sf::Vector2f(b2_bodyDef.position.x / BOX2D_SCALE, b2_bodyDef.position.y / BOX2D_SCALE + TILE_SIZE);
+	// Fifth line
+	b2_bodyDef.position.Set(2 * TILE_SIZE * BOX2D_SCALE, 3.5 * TILE_SIZE * BOX2D_SCALE);
+	b2_staticBody = b2_world.CreateBody(&b2_bodyDef);
+	b2_staticBody->CreateFixture(&b2_fixture);
+	m_platformsPosition.push_back(b2_staticBody);
 
-				b2Body* b2_staticBody = b2_world.CreateBody(&b2_bodyDef);
-				b2_staticBody->CreateFixture(&b2_fixture);
-			}
-			else {*/
-				/*// define its 4 color
-				quad[0].color = sf::Color::White;
-				quad[1].color = sf::Color::White;
-				quad[2].color = sf::Color::White;
-				quad[3].color = sf::Color::White;*/
+	b2_bodyDef.position.Set((TILES_WIDTH - 2) * TILE_SIZE * BOX2D_SCALE, 3.5 * TILE_SIZE * BOX2D_SCALE);
+	b2_staticBody = b2_world.CreateBody(&b2_bodyDef);
+	b2_staticBody->CreateFixture(&b2_fixture);
+	m_platformsPosition.push_back(b2_staticBody);
 
-				/*m_matrixCollision[i + j * TILES_WIDTH] = false;
-			}
-		}
-	}*/
-
-	// Define last line
-	/*for (unsigned int i = 0; i < TILES_WIDTH; ++i) {
-		unsigned int j = TILES_HEIGTH - 1;
-		// get a pointer to the current tile's quad
-		sf::Vertex* quad = &m_vertices[(i + j * TILES_WIDTH) * 4];
-
-		// define its 4 corners
-		quad[0].position = sf::Vector2f(i * TILE_SIZE, j * TILE_SIZE);
-		quad[1].position = sf::Vector2f((i + 1) * TILE_SIZE, j * TILE_SIZE);
-		quad[2].position = sf::Vector2f((i + 1) * TILE_SIZE, (j + 1) * TILE_SIZE);
-		quad[3].position = sf::Vector2f(i * TILE_SIZE, (j + 1) * TILE_SIZE);
-
-		quad[0].color = sf::Color::Green;
-		quad[1].color = sf::Color::Green;
-		quad[2].color = sf::Color::Green;
-		quad[3].color = sf::Color::Red;
-
-		m_matrixCollision[i + j * TILES_WIDTH] = true;
-
-		b2_bodyDef.position.Set((i * TILE_SIZE) * BOX2D_SCALE, (j * TILE_SIZE) * BOX2D_SCALE);
-
-		b2Body* b2_staticBody = b2_world.CreateBody(&b2_bodyDef);
-		b2_staticBody->CreateFixture(&b2_fixture);
-	}*/
+	// Last line
+	b2_bodyDef.position.Set((TILES_WIDTH / 2) * TILE_SIZE * BOX2D_SCALE, 2 * TILE_SIZE * BOX2D_SCALE);
+	b2_staticBody = b2_world.CreateBody(&b2_bodyDef);
+	b2_staticBody->CreateFixture(&b2_fixture);
+	m_platformsPosition.push_back(b2_staticBody);
 }
 
 void Platforms::render(sf::RenderWindow& window) {
