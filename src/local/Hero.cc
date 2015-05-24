@@ -27,7 +27,8 @@
 
 #include "Platforms.h"
 
-static constexpr float HERO_SIZE = 64.0f;
+static constexpr float HERO_WIDTH = 64.0f;
+static constexpr float HERO_HEIGHT = 58.0f;
 static constexpr float X_VELOCITY = 4.0f;
 static constexpr float Y_VELOCITY = -5.0f;
 static constexpr float LIMIT_ANIME = 0.03f;
@@ -49,8 +50,23 @@ Hero::Hero(b2World &b2_world, game::ResourceManager &resources, const sf::Vector
 	b2_bodyDef.type = b2_dynamicBody;
 	b2_bodyDef.position.Set(position.x * BOX2D_SCALE, position.y * BOX2D_SCALE);
 
+	float half_w = HERO_WIDTH * BOX2D_SCALE * 0.5f;
+	float half_h = HERO_HEIGHT * BOX2D_SCALE * 0.5f;
+
+	static constexpr float X = 0.6f;
+
+	b2Vec2 vertices[8];
+	vertices[0].Set(- half_w, X * half_h);
+	vertices[1].Set(- X * half_w, half_h);
+	vertices[2].Set(  X * half_w, half_h);
+	vertices[3].Set(  half_w, X * half_h);
+	vertices[4].Set(  half_w, - X * half_h);
+	vertices[5].Set(  X * half_w, - half_h);
+	vertices[6].Set(- X * half_w, - half_h);
+	vertices[7].Set(- half_w, - X * half_h);
+
 	b2PolygonShape b2_boxShape;
-	b2_boxShape.SetAsBox(HERO_SIZE * BOX2D_SCALE * 0.5f, HERO_SIZE * BOX2D_SCALE * 0.5f);
+	b2_boxShape.Set(vertices, 8);
 
 	b2FixtureDef b2_fixture;
 	b2_fixture.shape = &b2_boxShape;
