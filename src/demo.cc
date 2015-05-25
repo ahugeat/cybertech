@@ -39,7 +39,7 @@ int main(void) {
 	game::Random random;
 
 	game::ResourceManager resources;
-	resources.addSearchDir("../data");
+	resources.addSearchDir("./data");
 
 	local::Bones bones(resources, random);
 	
